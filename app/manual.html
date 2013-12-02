@@ -1,0 +1,152 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GeoProject</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <!-- endbuild -->
+</head>
+<body>
+<!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div class="container">
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li><a href="index.html">Application</a></li>
+            <li class="active"><a href="manual.html">Manual</a></li>
+            <li><a href="algorithm.html">Algo</a></li>
+            <li><a href="docs.html">Docs</a></li>
+        </ul>
+        <h3 class="text-muted">Computational Geometry - KD Tree</h3>
+    </div>
+
+    <div>
+        <h2>Overview</h2>
+        <p>
+            This application visualize kd-tree data structure.
+            You can generate some points, create kd-tree using them and perform range query.
+            Both creation and querying the tree can be done step by step
+            to help you learn the idea behind this structure.
+        </p>
+        <h2>Points generation</h2>
+        <p>
+            First start with decision how many points you want to generate.
+            Application can handle easily even more than 300 points
+            but if you want to understand idea behind the kd-tree and use step-by-step mode
+            you'd better select 20-30 points. Click the "Regenerate points" button to proceed. <br />
+            <img src="images/generation.png" alt="Generated points" class="screenshot"/>
+        </p>
+        <h2>KD-tree creation</h2>
+        <p>
+            Now you can create kd-tree. You can either simply click on "Generate kd-tree" button
+            and you'll see generated tree like this: <br />
+            <img src="images/kd-tree.png" alt="KD-tree creation" class="screenshot"/>
+            If you want to deeply understand the idea and tree creation algorithm
+            check "step by step?" checkbox placed just next to the number points selector and
+            click "Generate kd-tree" button one more time. You'll see some new controls enabling you
+            to iterate forward and backward through algorithm steps, giving you detailed description
+            of each step and visualizing current step. Inside buttons change current step by one,
+            outside ones rewinds it to the start or forwards to the end. Click on the "Finish" button
+            in order to close step by step mode. <br />
+            <img src="images/kd-tree-step-by-step.png" alt="KD-tree creation step by step" class="screenshot"/>
+        </p>
+        <h2>Range querying</h2>
+        <p>
+            When you have your tree generated you can perform range query using it.
+            Start with clicking "Perform search" button which is now enabled.
+            You'll see a result of a sample query. Now you can select a new range with your mouse
+            or move and change the size of the existing selection. When you are done with the selection
+            click on the "Perform search" once again and you'll see the result.
+            All points that were classified as "in the range" are marked with red color.
+            All points that were taken into consideration during the query process but not selected
+            are marked with yellow color. <br />
+            <img class="screenshot" src="images/range-query.png" alt="Range query"/>
+            Similarly as with creation, you can have the algorithm presented step by step
+            if you check "step by step?" checkbox before clicking "Perform search". <br />
+            <img class="screenshot" src="images/range-query-step-by-step.png" alt="Range query step by step"/>
+        </p>
+        <h2>Binary tree view</h2>
+        <p>
+            Besides the geometrical visualization characteristic to kd-tree application displays also
+            binary tree visualization of the kd-tree instance in the application memory.
+            Similarly to the geometrical view it updates also in the step by step mode.
+            State of the nodes is denoted by their color:
+            <ul>
+                <li>White - not processed yet</li>
+                <li>Gray - processed fully</li>
+                <li>Green - leaf (contains a point)</li>
+                <li>Yellow - checked but not in query range (only for leaves)</li>
+                <li>Red - in a query range (only for leaves)</li>
+                <li>Black - subtree is fully contained in a query range</li>
+                <li>Blue - currently processed node (only step by step mode)</li>
+            </ul>
+            Moreover you can mouse over some nodes and you'll see the range on the plane
+            that a node is responsible for. You can also collapse some nodes by clicking on them.
+            Here is a binary tree visualized in the middle of kd-tree creation:<br />
+            <img class="screenshot" src="images/binary-tree-creation.png" alt="Binary tree - kd-tree creation"/>
+            And here is the tree after querying for a range: <br />
+            <img class="screenshot" src="images/binary-tree-query.png" alt="Binary tree - querying"/>
+        </p>
+    </div>
+
+    <div class="footer">
+        <p>Bartłomiej Szczepanik</p>
+    </div>
+
+</div>
+
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/jquery.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-XXXXX-X');ga('send','pageview');
+</script>
+
+<!-- build:js scripts/kdtree.js -->
+<script src="scripts/kdtree.js"></script>
+<script src="scripts/chart.js"></script>
+<script src="scripts/binarytree.js"></script>
+<script src="scripts/history.js"></script>
+<script src="scripts/main.js"></script>
+<!-- endbuild -->
+
+<!-- build:js scripts/plugins.js -->
+<script src="bower_components/sass-bootstrap/js/affix.js"></script>
+<script src="bower_components/sass-bootstrap/js/alert.js"></script>
+<script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
+<script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
+<script src="bower_components/sass-bootstrap/js/modal.js"></script>
+<script src="bower_components/sass-bootstrap/js/transition.js"></script>
+<script src="bower_components/sass-bootstrap/js/button.js"></script>
+<script src="bower_components/sass-bootstrap/js/popover.js"></script>
+<script src="bower_components/sass-bootstrap/js/carousel.js"></script>
+<script src="bower_components/sass-bootstrap/js/scrollspy.js"></script>
+<script src="bower_components/sass-bootstrap/js/collapse.js"></script>
+<script src="bower_components/sass-bootstrap/js/tab.js"></script>
+<!-- endbuild -->
+</body>
+</html>

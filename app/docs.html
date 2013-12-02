@@ -1,0 +1,165 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GeoProject</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <link rel="stylesheet" href="bower_components/highlightjs/styles/default.css">
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <!-- endbuild -->
+</head>
+<body>
+<!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+
+
+
+<div class="container">
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li><a href="index.html">Application</a></li>
+            <li><a href="manual.html">Manual</a></li>
+            <li><a href="algorithm.html">Algo</a></li>
+            <li class="active"><a href="docs.html">Docs</a></li>
+        </ul>
+        <h3 class="text-muted">Computational Geometry - KD Tree</h3>
+    </div>
+
+    <div>
+        <h2>Purpose</h2>
+        <p>
+            This project was created for Computational Geometry course
+            conducted by Ph.D. Barbara Głut at AGH University of Science and Technology.
+        </p>
+
+        <h2>Presentation</h2>
+        <p>
+            The project was first presented in the classroom.
+            Here is a link to the the slides (in polish language):
+            <a href="http://slid.es/mequrel/kddrzewa">http://slid.es/mequrel/kddrzewa</a>
+        </p>
+
+        <h2>Code</h2>
+        <p>
+            Application was created as a webapp in order to be accessible and useful
+            to anyone. I used generic web application skeleton provided by "yo" app generator.
+            The functional code is placed in scripts/ directory and divided on 5 modules:
+            <ul>
+                <li>binarytree.js - displays binary tree visualizer, highly influenced by: ...</li>
+                <li>chart.js - displays geometrical representation of kd-tree, highly influenced by: ...</li>
+                <li>history.js - contains descriptor service implementation and
+                    is able to present algorithm history dumped during its execution</li>
+                <li>kdtree.js - core part, algorithms implementation</li>
+                <li>main.js - combines all modules together, has view state machine implemented</li>
+            </ul>
+        </p>
+        <p>
+            Algorithm history visualization is implemented using the idea of execution log.
+            Each algorithm has injected special service called describer.
+            Using this service algorithm is able to describe each step both textually and graphically.
+            Here's an example taken from search function performing range query:
+            <pre><code class="javascript">describer.nextStep()
+    .write("Finished recursion for left/up part.")
+    .setCurrentNode(kdTree)
+    .highlightRange(kdTree.left.range);</code></pre>
+            Using describer algorithm can merge many describing request in one step.
+            Fluent syntax interface of the describer helps with code readability.
+        </p>
+
+        <h2>GitHub</h2>
+        <p>
+            Code of this application along with its documentation is published on GitHub with BSD license.
+            Feel free to fork or contribute. I would appreciate if you let me know that this app was useful for you.
+        </p>
+        <p>
+            GitHub link: <a href="http://github.com/mequrel/kd-tree-visualization">
+            http://github.com/mequrel/kd-tree-visualization</a>
+        </p>
+
+        <h2>Acknowledgments and reference</h2>
+        <p>
+            I took big advantage by using <a href="http://d3js.org/">d3.js</a> library along with their brilliant
+            <a href="https://github.com/mbostock/d3/wiki/Gallery">examples</a>.
+            Two of those examples: <a href="http://mbostock.github.io/d3/talk/20111018/tree.html">Collapsible tree layout</a> and
+            <a href="http://bl.ocks.org/mbostock/4343214">Quadtree</a> were adapted to visualize kd-tree algorithms.
+            Thanks mbostock!
+        </p>
+
+        <p>
+            Application was created using <a href="http://yeoman.io/">yeoman workflow</a>.
+            As previously described app skeleton was generated using <a href="https://github.com/yeoman/yo">yo</a> tool.
+            The app was compiled, minified and deployed using <a href="http://gruntjs.com/">grunt</a>.
+            Besides d3.js also <a href="http://jquery.com/">jQuery</a> and <a href="http://highlightjs.org/">highlight.js</a> were used.
+        </p>
+
+        <p id="references">
+            References that really helped me:
+            <ul>
+                <li><a href="http://www.cs.uu.nl/geobook/">Computational Geometry</a> by Berg, van Kreveld, Overmars and Schwarzkopf</li>
+                <li><a href="http://en.wikipedia.org/wiki/K-d_tree">Wikipedia kd-tree article</a></li>
+            </ul>
+        </p>
+    </div>
+
+    <div class="footer">
+        <p>Bartłomiej Szczepanik</p>
+    </div>
+
+</div>
+
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/jquery.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+<script src="bower_components/highlightjs/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-XXXXX-X');ga('send','pageview');
+</script>
+
+<!-- build:js scripts/kdtree.js -->
+<script src="scripts/kdtree.js"></script>
+<script src="scripts/chart.js"></script>
+<script src="scripts/binarytree.js"></script>
+<script src="scripts/history.js"></script>
+<script src="scripts/main.js"></script>
+<!-- endbuild -->
+
+
+<!-- build:js scripts/plugins.js -->
+<script src="bower_components/sass-bootstrap/js/affix.js"></script>
+<script src="bower_components/sass-bootstrap/js/alert.js"></script>
+<script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
+<script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
+<script src="bower_components/sass-bootstrap/js/modal.js"></script>
+<script src="bower_components/sass-bootstrap/js/transition.js"></script>
+<script src="bower_components/sass-bootstrap/js/button.js"></script>
+<script src="bower_components/sass-bootstrap/js/popover.js"></script>
+<script src="bower_components/sass-bootstrap/js/carousel.js"></script>
+<script src="bower_components/sass-bootstrap/js/scrollspy.js"></script>
+<script src="bower_components/sass-bootstrap/js/collapse.js"></script>
+<script src="bower_components/sass-bootstrap/js/tab.js"></script>
+<!-- endbuild -->

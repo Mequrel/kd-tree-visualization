@@ -1,0 +1,232 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GeoProject</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <link rel="stylesheet" href="bower_components/highlightjs/styles/default.css">
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <!-- endbuild -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+        });
+    </script>
+    <script type="text/javascript"
+            src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+</head>
+<body>
+<!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+
+
+
+<div class="container">
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li><a href="index.html">Application</a></li>
+            <li><a href="manual.html">Manual</a></li>
+            <li class="active"><a href="algorithm.html">Algo</a></li>
+            <li><a href="docs.html">Docs</a></li>
+        </ul>
+        <h3 class="text-muted">Computational Geometry - KD Tree</h3>
+    </div>
+
+    <div>
+        <h2>Points in leaves</h2>
+        <p>
+            This visualization uses a version of kd-tree with points placed only in tree leaves
+            that can have partition out of points coordinates set (when we calculate median of
+            even points set) that is described in <a href="http://www.cs.uu.nl/geobook/">"Computational Geometry" by Berg</a>.
+            This version is a little easier to understand but may be less efficient compared to the version with
+            one point for each node.
+        </p>
+
+        <h2>Range computation</h2>
+        <p>
+            This algorithm computes ranges for each node during kd-tree creation.
+            It is not required as we can compute it on-demand when performing the search
+            but in this case is easier to write and understand the search algorithm.
+        </p>
+
+        <h2>kd-tree node</h2>
+        <p>
+            <pre><code class="javascript">function kdTreeNode() {
+    return {
+        left: null,     // left child
+        right: null,    // right child
+        axis: null,     // axis that we used to divide range [0 -&gt; x, 1 -&gt; y]
+        value: null,    // division value (median)
+        point: null,    // point (only in leaves)
+        range: null     // range the node is responsible for
+    };
+}</code></pre>
+        </p>
+
+        <h2>Creation code</h2>
+        <pre><code class="javascript">function createKDTree(points, axis, range, describer) {
+    var node = kdTreeNode();
+    node.axis = axis;
+    node.range = range;
+
+    if (points.length == 1) { // if there is only 1 point left create a leaf
+        node.value = points[0][axis];
+        node.point = points[0];
+        return node;
+    }
+
+    // otherwise split points by median on current axis
+    var medianValue = d3.median(points, function(point) {
+        return +point[axis];
+    });
+    node.value = medianValue;
+
+    var left = points.filter(function(point) {
+        return +point[axis] &lt;= medianValue;
+    });
+
+    var leftRange = [range[0].slice(), range[1].slice()];
+    leftRange[1][axis] = medianValue;
+
+    var right = points.filter(function(point) {
+        return +point[axis] &gt; medianValue;
+    });
+
+    var rightRange = [range[0].slice(), range[1].slice()];
+    rightRange[0][axis] = medianValue;
+
+    // call recursively with next axis and both parts of range
+    var nextAxis = (axis + 1) % 2;
+    node.left = createKDTree(left, nextAxis, leftRange, describer);
+    node.right = createKDTree(right, nextAxis, rightRange, describer);
+
+    return node;
+}</code></pre>
+
+        </p>
+
+        <h2>Range querying code</h2>
+        <p><pre><code class="javascript">function search(kdTree, range, describer) {
+    if(kdTree.point) {  // is it a leaf?
+        // check only the point's adherence to the range
+        if(isInRange(kdTree.point, range)) {
+            return [kdTree.point];
+        } else {
+            return [];
+        }
+    }
+
+    var result = []
+
+    if(fullyContains(range, kdTree.left.range)) {
+        // add all points from the subtree
+        var leftResult = reportSubtree(kdTree.left);
+        result = result.concat(leftResult);
+    }
+    else if(intersects(range, kdTree.left.range)) {
+        //call recursively
+        var leftResult = search(kdTree.left, range, describer);
+        result = result.concat(leftResult);
+    }
+
+    if(fullyContains(range, kdTree.right.range)) {
+        // add all points from the subtree
+        var rightResult = reportSubtree(kdTree.right);
+        result = result.concat(rightResult);
+    }
+    else if(intersects(range, kdTree.right.range)) {
+        // call recursively
+        var rightResult = search(kdTree.right, range, describer);
+        result = result.concat(rightResult);
+    }
+
+    return result;
+}</code></pre></p>
+
+        <h2>Time complexity</h2>
+        <p>
+            <ul>
+                <li>Creation time: $$O(n \log n)$$</li>
+                <li>Range query time - 2D: $$O(\sqrt{n})$$</li>
+            </ul>
+        </p>
+
+        <h2>Higher dimensions</h2>
+        <p>
+            Kd-tree is extremely easy to scale on higher dimensions.
+            The only change you need to make is to change this line from tree creation algorithm:
+            <pre><code class="javascript">var nextAxis = (axis + 1) % 2;</code></pre>
+            and substitute 2 to 3 or different dimension. Of course you have to modify
+            also some primitives like intersection checking if you don't have them already.
+        </p>
+        <p>
+            Unfortunately kd-tree is susceptible to "curse of dimensionality"
+            and becomes quite inefficient in higher dimensions.
+            The range query time complexity equals to $$O(n^{1-\frac{1}{d}})$$ where $d$ is the dimension of your input points.
+            It becomes more and more linear as the dimension increases.
+            You can find thorough time complexity analysis in book <a href="http://www.cs.uu.nl/geobook/">"Computational Geometry" by Berg</a>.
+        </p>
+    </div>
+
+    <div class="footer">
+        <p>Bartłomiej Szczepanik</p>
+    </div>
+
+</div>
+
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/jquery.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<script src="bower_components/highlightjs/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-XXXXX-X');ga('send','pageview');
+</script>
+
+<!-- build:js scripts/kdtree.js -->
+<script src="scripts/kdtree.js"></script>
+<script src="scripts/chart.js"></script>
+<script src="scripts/binarytree.js"></script>
+<script src="scripts/history.js"></script>
+<script src="scripts/main.js"></script>
+<!-- endbuild -->
+
+<!-- build:js scripts/plugins.js -->
+<script src="bower_components/sass-bootstrap/js/affix.js"></script>
+<script src="bower_components/sass-bootstrap/js/alert.js"></script>
+<script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
+<script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
+<script src="bower_components/sass-bootstrap/js/modal.js"></script>
+<script src="bower_components/sass-bootstrap/js/transition.js"></script>
+<script src="bower_components/sass-bootstrap/js/button.js"></script>
+<script src="bower_components/sass-bootstrap/js/popover.js"></script>
+<script src="bower_components/sass-bootstrap/js/carousel.js"></script>
+<script src="bower_components/sass-bootstrap/js/scrollspy.js"></script>
+<script src="bower_components/sass-bootstrap/js/collapse.js"></script>
+<script src="bower_components/sass-bootstrap/js/tab.js"></script>
+<!-- endbuild -->

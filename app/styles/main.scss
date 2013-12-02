@@ -1,0 +1,209 @@
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+@import 'sass-bootstrap/lib/bootstrap';
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+}
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+    margin: 40px 0;
+}
+
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .container {
+        max-width: 730px;
+    }
+
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+.point {
+  fill: #999;
+  stroke: #fff;
+}
+
+.point.scanned {
+  fill: orange;
+  fill-opacity: 1;
+  stroke: brown;
+}
+
+.point.selected {
+  fill: red;
+  fill-opacity: 1;
+}
+
+
+.point.highlighted {
+  fill: black;
+  fill-opacity: 1;
+}
+
+
+.node {
+  fill: none;
+  stroke: #ccc;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+
+.tree-node circle {
+  cursor: pointer;
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.tree-node text {
+  font-size: 11px;
+}
+
+path.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+rect.highlight {
+  stroke: #fff;
+  fill-opacity: .150;
+  shape-rendering: crispEdges;
+}
+
+rect.node-highlight {
+  fill: #00f;
+  fill-opacity: .150;
+  shape-rendering: crispEdges;
+}
+
+rect.node-highlight2 {
+  fill: #0f0;
+  fill-opacity: .300;
+  shape-rendering: crispEdges;
+}
+
+circle.circle-highlight2 {
+  fill: #ff0;
+  stroke: #000;
+}
+
+
+
+circle.highlight {
+  fill: #f00;
+  stroke: #fff;
+}
+
+.division {
+  fill: none;
+  stroke: #f00;
+  shape-rendering: crispEdges;
+}
+
+#kdtree {
+  border: 1px solid black;
+}
+
+
+.reported-fully {
+  fill: #ccc;
+  stroke: #fff;
+  fill-opacity: .300;
+  shape-rendering: crispEdges;
+}
+
+.done {
+  fill: #000;
+  fill-opacity: .040;
+  shape-rendering: crispEdges;
+}
+
+
+.screenshot {
+  margin: 0;
+  padding: 0;
+  border: 1px solid #eee;
+}
+
+body p {
+  text-align: justify;
+}
